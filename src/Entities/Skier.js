@@ -5,12 +5,20 @@ import { intersectTwoRects, Rect } from '../Core/Utils'
 export class Skier extends Entity {
   constructor (x, y) {
     super(x, y)
+    this.start()
+  }
 
-    this.life = 3
+  start () {
+    this.life = Constants.DEFAULT_LIFE
     this.assetName = Constants.SKIER_DOWN
 
     this.direction = Constants.SKIER_DIRECTIONS.DOWN
     this.speed = Constants.SKIER_STARTING_SPEED
+    this.setPosition(0, 0)
+  }
+
+  takeLife () {
+    --this.life
   }
 
   setDirection (direction) {
@@ -123,7 +131,7 @@ export class Skier extends Entity {
     })
 
     if (collision) {
-      console.log('crased take life')
+      this.takeLife()
       this.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
     }
   };

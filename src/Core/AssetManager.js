@@ -1,35 +1,34 @@
 export class AssetManager {
-    loadedAssets = [];
+  constructor () {
+    this.loadedAssets = []
+  }
 
-    constructor() {
+  async loadAssets (assets) {
+    const assetPromises = []
+
+    for (const [assetName, assetUrl] of Object.entries(assets)) {
+      const assetPromise = this.loadSingleAsset(assetUrl, assetName)
+      assetPromises.push(assetPromise)
     }
 
-    async loadAssets(assets) {
-        const assetPromises = [];
+    await Promise.all(assetPromises)
+  }
 
-        for (const [assetName, assetUrl] of Object.entries(assets)) {
-            const assetPromise = this.loadSingleAsset(assetUrl, assetName);
-            assetPromises.push(assetPromise);
-        }
+  loadSingleAsset (assetUrl, assetName) {
+    return new Promise((resolve) => {
+      const assetImage = new Image()
+      assetImage.onload = () => {
+        assetImage.width /= 2
+        assetImage.height /= 2
 
-        await Promise.all(assetPromises);
-    }
+        this.loadedAssets[assetName] = assetImage
+        resolve()
+      }
+      assetImage.src = assetUrl
+    })
+  }
 
-    loadSingleAsset(assetUrl, assetName) {
-        return new Promise((resolve) => {
-            const assetImage = new Image();
-            assetImage.onload = () => {
-                assetImage.width /= 2;
-                assetImage.height /= 2;
-
-                this.loadedAssets[assetName] = assetImage;
-                resolve();
-            };
-            assetImage.src = assetUrl;
-        });
-    }
-
-    getAsset(assetName) {
-        return this.loadedAssets[assetName];
-    }
+  getAsset (assetName) {
+    return this.loadedAssets[assetName]
+  }
 }
