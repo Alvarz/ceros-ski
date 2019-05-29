@@ -98,7 +98,6 @@ export class ObstacleManager {
         });
 
         if(foundCollision) {
-          console.log('collision')
             return this.calculateOpenPosition(minX, maxX, minY, maxY);
         }
         else {
