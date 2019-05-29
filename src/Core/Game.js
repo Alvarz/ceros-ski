@@ -8,6 +8,7 @@ import { Rect } from './Utils'
 export class Game {
   constructor () {
     this.isGameOver = false
+    this.isGamePause = false
     this.gameWindow = null
     this.assetManager = new AssetManager()
     this.canvas = new Canvas(Constants.GAME_WIDTH, Constants.GAME_HEIGHT)
@@ -15,13 +16,6 @@ export class Game {
     this.obstacleManager = new ObstacleManager()
 
     document.addEventListener('keydown', this.handleKeyDown.bind(this))
-  }
-
-  restart () {
-
-        console.log('restart')
-    this.skier.start()
-    this.isGameOver = false
   }
 
   init () {
@@ -41,12 +35,23 @@ export class Game {
     window.requestAnimationFrame(this.run.bind(this))
   }
 
+  restart () {
+    console.log('restart')
+    this.skier.start()
+    this.isGameOver = false
+  }
+
+  pauseOrResume () {
+    console.log('pause or resume')
+    this.isGamePause = !this.isGamePause
+  }
+
   /*
    * main game Update
    * @return {void}
    * */
   updateGameWindow () {
-    if (this.isGameOver) {
+    if (this.isGameOver || this.isGamePause) {
       return
     }
     this.skier.move()
@@ -98,6 +103,7 @@ export class Game {
       if (event.which === Constants.KEYS.ENTER) {
         this.restart()
       }
+      console.log(event.which)
       return
     }
     switch (event.which) {
@@ -115,6 +121,10 @@ export class Game {
         break
       case Constants.KEYS.DOWN:
         this.skier.turnDown()
+        event.preventDefault()
+        break
+      case Constants.KEYS.SPACEBAR:
+        this.pauseOrResume()
         event.preventDefault()
         break
     }
