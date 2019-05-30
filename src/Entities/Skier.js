@@ -3,22 +3,47 @@ import { Entity } from './Entity'
 import { intersectTwoRects, Rect } from '../Core/Utils'
 
 export class Skier extends Entity {
-  constructor (x, y) {
-    super(x, y)
+  constructor (vector2Dposition) {
+    super(vector2Dposition.x, vector2Dposition.y)
+    this.startPosition = vector2Dposition
+
+    this.isDead = false
+    this.isPlayerDeadEvent = new Event('IsPlayerDead')
+    this.playerWasHit = new Event('PlayerWasHit')
     this.start()
   }
 
   start () {
+    this.isDead = false
+    this.speedMultplier = 1
     this.life = Constants.DEFAULT_LIFE
     this.assetName = Constants.SKIER_DOWN
 
     this.direction = Constants.SKIER_DIRECTIONS.DOWN
     this.speed = Constants.SKIER_STARTING_SPEED
-    this.setPosition(0, 0)
+    this.setPosition(this.startPosition.x, this.startPosition.y)
+  }
+
+  changeSpeed (value) {
+    if (value < 0.01) {
+      value = 0.1
+    }
+
+    this.speedMultiplier = value
   }
 
   takeLife () {
     --this.life
+    if (this.life < 1 && !this.isDead) {
+      this.life = 0
+      this.die()
+    }
+    document.dispatchEvent(this.playerWasHit)
+  }
+
+  die () {
+    this.isDead = true
+    document.dispatchEvent(this.isPlayerDeadEvent)
   }
 
   setDirection (direction) {
@@ -45,29 +70,29 @@ export class Skier extends Entity {
   }
 
   moveSkierLeft () {
-    this.x -= Constants.SKIER_STARTING_SPEED
+    this.position.x -= Constants.SKIER_STARTING_SPEED
   }
 
   moveSkierLeftDown () {
-    this.x -= this.speed / Constants.SKIER_DIAGONAL_SPEED_REDUCER
-    this.y += this.speed / Constants.SKIER_DIAGONAL_SPEED_REDUCER
+    this.position.x -= (this.speed * this.speedMultplier) / Constants.SKIER_DIAGONAL_SPEED_REDUCER
+    this.position.y += (this.speed * this.speedMultplier) / Constants.SKIER_DIAGONAL_SPEED_REDUCER
   }
 
   moveSkierDown () {
-    this.y += this.speed
+    this.position.y += (this.speed * this.speedMultplier)
   }
 
   moveSkierRightDown () {
-    this.x += this.speed / Constants.SKIER_DIAGONAL_SPEED_REDUCER
-    this.y += this.speed / Constants.SKIER_DIAGONAL_SPEED_REDUCER
+    this.position.x += (this.speed * this.speedMultplier) / Constants.SKIER_DIAGONAL_SPEED_REDUCER
+    this.position.y += (this.speed * this.speedMultplier) / Constants.SKIER_DIAGONAL_SPEED_REDUCER
   }
 
   moveSkierRight () {
-    this.x += Constants.SKIER_STARTING_SPEED
+    this.position.x += Constants.SKIER_STARTING_SPEED
   }
 
   moveSkierUp () {
-    this.y -= Constants.SKIER_STARTING_SPEED
+    this.position.y -= Constants.SKIER_STARTING_SPEED
   }
 
   turnLeft () {
@@ -111,10 +136,10 @@ export class Skier extends Entity {
     }
     const asset = assetManager.getAsset(this.assetName)
     const skierBounds = new Rect(
-      this.x - asset.width / 2,
-      this.y - asset.height / 2,
-      this.x + asset.width / 2,
-      this.y - asset.height / 4
+      this.position.x - asset.width / 2,
+      this.position.y - asset.height / 2,
+      this.position.x + asset.width / 2,
+      this.position.y - asset.height / 4
     )
 
     const collision = obstacleManager.getObstacles().find((obstacle) => {
