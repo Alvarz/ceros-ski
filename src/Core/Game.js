@@ -2,19 +2,23 @@ import * as Constants from '../Constants'
 import { AssetManager } from './AssetManager'
 import { Canvas } from './Canvas'
 import { Skier } from '../Entities/Skier'
+import GameManager from './GameManager'
 import { ObstacleManager } from '../Entities/Obstacles/ObstacleManager'
-import { Rect } from './Utils'
+import { Rect, Vector2D } from './Utils'
 
 export class Game {
   constructor () {
+    this.origin = new Vector2D(0, 0)
     this.isGameOver = false
     this.isGamePause = false
     this.gameWindow = null
     this.assetManager = new AssetManager()
     this.canvas = new Canvas(Constants.GAME_WIDTH, Constants.GAME_HEIGHT)
-    this.skier = new Skier(0, 0)
+    this.skier = new Skier(this.origin)
     this.obstacleManager = new ObstacleManager()
+    this.gameManager = new GameManager(this.skier, this.origin)
 
+    document.addEventListener('GameOver', this.GameOver.bind(this))
     document.addEventListener('keydown', this.handleKeyDown.bind(this))
   }
 
@@ -63,24 +67,12 @@ export class Game {
 
     this.skier.checkIfSkierHitObstacle(this.obstacleManager, this.assetManager)
 
-    this.validatePlayerLife()
+    this.gameManager.update()
   }
 
-  validatePlayerLife () {
-    let currentLife = this.skier.life
-    if (currentLife < 1) {
-      currentLife = 0
-      this.gameOver()
-    }
-    console.log(currentLife, 'life')
-  }
-
-  gameOver () {
-    if (this.isGameOver) {
-      return
-    }
+  GameOver (event) {
+    console.log('Game Over!')
     this.isGameOver = true
-    console.log('game over')
   }
 
   drawGameWindow () {
