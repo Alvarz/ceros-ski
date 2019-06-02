@@ -40,6 +40,11 @@ export class ObstacleManager {
   }
 
   placeNewObstacle (gameWindow, previousGameWindow) {
+    // this is used to prevent a bug, sometimes when load, previousGameWindow is
+    // null cause the game to crash
+    if (!previousGameWindow) {
+      return
+    }
     const shouldPlaceObstacle = randomInt(1, NEW_OBSTACLE_CHANCE)
     if (shouldPlaceObstacle !== NEW_OBSTACLE_CHANCE) {
       return
