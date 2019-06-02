@@ -1,5 +1,5 @@
 
-**Challenge's approach**
+**ChangeLog**
 
 Many task where made in the time given for this challenge, some of those were:
 
