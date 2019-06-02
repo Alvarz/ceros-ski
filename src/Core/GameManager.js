@@ -2,7 +2,13 @@ import * as Constants from '../Constants'
 import { Vector2D } from './Utils'
 import { Yety } from '../Entities/Yety'
 
+/*
+ * @class GameManager
+ * */
 export default class GameManager {
+  /*
+   * @class costructor
+   * */
   constructor (skier, origin, canvas, assetManager, obstacleManager) {
     this.IsYetiActive = false
     // his.yetiStartPoint = new Vector2D(Constants.GAME_WIDTH * 0.75, Constants.GAME_HEIGHT * 0.2)
@@ -21,40 +27,56 @@ export default class GameManager {
     document.addEventListener('IsPlayerDead', this.isPlayerisAlive.bind(this))
   }
 
+  /*
+   * called one per frame
+   * @return {void}
+   * */
   update () {
     // called on per frame
     this.showYety()
   }
 
+  /*
+   * event dispatcher if player die
+   * @return {void}
+   * */
   isPlayerisAlive () {
-    console.log('player die show some fancy UI')
     document.dispatchEvent(this.gameOverEvent)
   }
 
+  /*
+   * called when player was hit
+   * @return {void}
+   * */
   playerWasHit () {
-    console.log('PlayerWasHit, play some sound')
+    // play some fancy sound
   }
 
+  /*
+   * get the distance traveled for the player from origin and spawn a yety under
+   * certains conditions
+   * @return {void}
+   * */
   distanceFromOriginToPlayerPosition () {
     const distance = this.skier.position.distance(this.origin)
 
     if (distance > this.distanceToShowYeti && !this.IsYetiActive && this.currentTime <= 0) {
-      console.log('entro')
       this.currentTime = this.waitingSpotTime
       this.IsYetiActive = Math.random() >= 0.5
-      console.log(this.IsYetiActive)
       if (this.IsYetiActive) {
         this.yety.start()
-        console.log('spawned yeti')
       }
     }
 
     this.currentTime -= Constants.DELTA_TIME
 
     return distance
-    // console.log('distance from start: ', distance)
   }
 
+  /*
+   * used to activate the yety graphics on the game
+   * @return {void}
+   * */
   showYety () {
     if (!this.IsYetiActive) {
       return
@@ -62,6 +84,6 @@ export default class GameManager {
 
     this.yety.draw(this.canvas, this.assetManager)
     this.yety.move()
-    this.yety.checkIfSkierHitObstacle(this.obstacleManager, this.assetManager)
+    this.yety.checkIfSkierHitObstacle(this.assetManager)
   }
 }

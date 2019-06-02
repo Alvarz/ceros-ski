@@ -1,3 +1,35 @@
+
+**Challenge's approach**
+
+Many task where made in the time given for this challenge, some of those were:
+
+* The challenge's bug was found and fixed
+* Another bug was fixed, sometimes  on fresh load, when trying to place a new obstacle it get
+    stuck due no previous window found
+* Now we have the Rhino's attack event don't let him catch you!
+* brand new UI distance counter
+* Beautiful UI health's heart 
+* Handy UI controls indicator
+* Pixel style font
+* added pause when press the spacebar
+
+* Provided a way to reset the game once it's over, click enter and restart the
+    fun
+* added game over and distance counter on game over
+* added new Vector2D class to measure distance properly and extend as needed
+* added new GameManger to manage the game logic (some logic still on game class
+    and should be moved to game manager)
+
+To-Do / Roadmap
+* Add unit tests
+* Add skier jump funcionality
+* add leaderboard
+
+
+*Please, keep in mind that due my current job's work load, all the tasks for this challenge where made in one day*
+
+
+
 # Southteams Ski Code Challenge
 
 Welcome to the Southteams Code Challenge - Ski Edition!
@@ -91,3 +123,5 @@ how creative candidates get with this.
 * Write more unit tests for your code
 
 We are looking forward to see what you come up with!
+
+

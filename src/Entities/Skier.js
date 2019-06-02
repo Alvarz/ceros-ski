@@ -2,7 +2,13 @@ import * as Constants from '../Constants'
 import { Entity } from './Entity'
 import { intersectTwoRects, Rect } from '../Core/Utils'
 
+/*
+ * @class {Skier}
+ * */
 export class Skier extends Entity {
+  /*
+   * constructor
+   * */
   constructor (vector2Dposition) {
     super(vector2Dposition.x, vector2Dposition.y)
     this.startPosition = vector2Dposition
@@ -13,6 +19,10 @@ export class Skier extends Entity {
     this.start()
   }
 
+  /*
+   * called when the skier is spawned
+   * @return {void}
+   * */
   start () {
     this.isDead = false
     this.speedMultplier = 1
@@ -24,6 +34,11 @@ export class Skier extends Entity {
     this.setPosition(this.startPosition.x, this.startPosition.y)
   }
 
+  /*
+   * used to change the player speed
+   * @return {number} value
+   * @return {void}
+   * */
   changeSpeed (value) {
     if (value < 0.01) {
       value = 0.1
@@ -32,6 +47,10 @@ export class Skier extends Entity {
     this.speedMultiplier = value
   }
 
+  /*
+   * take the player health
+   * @return {void}
+   * */
   takeLife () {
     --this.life
     if (this.life < 1 && !this.isDead) {
@@ -41,20 +60,37 @@ export class Skier extends Entity {
     document.dispatchEvent(this.playerWasHit)
   }
 
+  /*
+   * event dispatcher when the player die
+   * @return {void}
+   * */
   die () {
     this.isDead = true
     document.dispatchEvent(this.isPlayerDeadEvent)
   }
 
+  /*
+   * set the new direction of the player
+   * @param {number} direction
+   * @return {void}
+   * */
   setDirection (direction) {
     this.direction = direction
     this.updateAsset()
   }
 
+  /*
+   * update the asset name
+   * @return {void}
+   * */
   updateAsset () {
     this.assetName = Constants.SKIER_DIRECTION_ASSET[this.direction]
   }
 
+  /*
+   * used to move the skier
+   * @return {void}
+   * */
   move () {
     switch (this.direction) {
       case Constants.SKIER_DIRECTIONS.LEFT_DOWN:
@@ -69,35 +105,64 @@ export class Skier extends Entity {
     }
   }
 
+  /*
+   * used to move the skier to the left
+   * @return {void}
+   * */
   moveSkierLeft () {
     this.position.x -= Constants.SKIER_STARTING_SPEED
   }
 
+  /*
+   * used to move the skier to the left down
+   * @return {void}
+   * */
   moveSkierLeftDown () {
     this.position.x -= (this.speed * this.speedMultplier) / Constants.SKIER_DIAGONAL_SPEED_REDUCER
     this.position.y += (this.speed * this.speedMultplier) / Constants.SKIER_DIAGONAL_SPEED_REDUCER
   }
 
+  /*
+   * used to move the skier to down
+   * @return {void}
+   * */
   moveSkierDown () {
     this.position.y += (this.speed * this.speedMultplier)
   }
 
+  /*
+   * used to move the skier to the right down
+   * @return {void}
+   * */
   moveSkierRightDown () {
     this.position.x += (this.speed * this.speedMultplier) / Constants.SKIER_DIAGONAL_SPEED_REDUCER
     this.position.y += (this.speed * this.speedMultplier) / Constants.SKIER_DIAGONAL_SPEED_REDUCER
   }
 
+  /*
+   * used to move the skier to the right
+   * @return {void}
+   * */
   moveSkierRight () {
     this.position.x += Constants.SKIER_STARTING_SPEED
   }
 
+  /*
+   * used to move the skier up
+   * @return {void}
+   * */
   moveSkierUp () {
     this.position.y -= Constants.SKIER_STARTING_SPEED
   }
 
+  /*
+   * used to turn left
+   * @return {void}
+   * */
   turnLeft () {
     if (this.direction === Constants.SKIER_DIRECTIONS.LEFT) {
       this.moveSkierLeft()
+      // challenge error fixed: the direction was below to 0
     } else if (this.direction === Constants.SKIER_DIRECTIONS.CRASH) {
       this.setDirection(Constants.SKIER_DIRECTIONS.LEFT)
     } else {
@@ -105,6 +170,10 @@ export class Skier extends Entity {
     }
   }
 
+  /*
+   * used to turn right
+   * @return {void}
+   * */
   turnRight () {
     if (this.direction === Constants.SKIER_DIRECTIONS.RIGHT) {
       this.moveSkierRight()
@@ -115,23 +184,41 @@ export class Skier extends Entity {
     }
   }
 
+  /*
+   * used to turn UP
+   * @return {void}
+   * */
   turnUp () {
     if (this.direction === Constants.SKIER_DIRECTIONS.LEFT || this.direction === Constants.SKIER_DIRECTIONS.RIGHT) {
       this.moveSkierUp()
     }
   }
 
+  /*
+   * used to turn down
+   * @return {void}
+   * */
   turnDown () {
     this.setDirection(Constants.SKIER_DIRECTIONS.DOWN)
   }
 
+  /*
+   * used to know if the player is already crashed or was stoped
+   * @return {boolean}
+   * */
   isAlreadyCrashOrStop () {
     return this.direction === Constants.SKIER_DIRECTIONS.CRASH || this.direction === Constants.SKIER_DIRECTIONS.LEFT || this.direction === Constants.SKIER_DIRECTIONS.RIGHT
   }
 
+  /*
+   * used to compute whenever the player hit some obstacle
+   * @param {object} obstacleManager
+   * @param {object} assetManager
+   * @return {boolean}
+   * */
   checkIfSkierHitObstacle (obstacleManager, assetManager) {
     if (this.isAlreadyCrashOrStop()) {
-      // already crashed no need to more validate this
+      // already crashed, no need to validate this  anymore
       return
     }
     const asset = assetManager.getAsset(this.assetName)

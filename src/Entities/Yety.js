@@ -2,7 +2,11 @@ import * as Constants from '../Constants'
 import { Entity } from './Entity'
 import { intersectTwoRects, Rect } from '../Core/Utils'
 
+/** @class Yety */
 export class Yety extends Entity {
+  /*
+    * Constructor
+    * */
   constructor (vector2Dposition, skier) {
     super(vector2Dposition.x, vector2Dposition.y)
     this.startPosition = vector2Dposition
@@ -14,6 +18,10 @@ export class Yety extends Entity {
     this.catched = false
   }
 
+  /*
+   * method called on spawn
+   * @return {void}
+   * */
   start () {
     this.speedMultplier = 1
     this.assetName = Constants.YETY_RUN_LEFT
@@ -28,15 +36,28 @@ export class Yety extends Entity {
     this.setPosition(x, y)
   }
 
-  setDirection (direction) {
-    this.stateMachine = direction
+  /*
+   * set the new state to the state machine
+   * @return {string} newState
+   * @return {void}
+   * */
+  setState (newState) {
+    this.stateMachine = newState
     this.updateAsset()
   }
 
+  /*
+   * update the asset to be used
+   * @return {void}
+   * */
   updateAsset () {
     this.assetName = Constants.YETI_DIRECTION_ASSET[this.stateMachine]
   }
 
+  /*
+   * move the yety
+   * @return {void}
+   * */
   move () {
     if (this.catched) {
       this.eatAnimation()
@@ -48,6 +69,10 @@ export class Yety extends Entity {
     this.currentTime -= Constants.DELTA_TIME
   }
 
+  /*
+   * anmation for movement
+   * @return {void}
+   * */
   moveAnimate () {
     const self = this
     if (this.currentTime <= 0) {
@@ -62,6 +87,10 @@ export class Yety extends Entity {
     }
   }
 
+  /*
+   * anmation for eat
+   * @return {void}
+   * */
   eatAnimation () {
     const self = this
     if (this.currentTime <= 0) {
@@ -69,19 +98,19 @@ export class Yety extends Entity {
 
       switch (this.stateMachine) {
         case Constants.YETI_STATE_MACHINE.LIFT:
-          this.setDirection(Constants.YETI_STATE_MACHINE.LIFT_MOUTH)
+          this.setState(Constants.YETI_STATE_MACHINE.LIFT_MOUTH)
           break
         case Constants.YETI_STATE_MACHINE.LIFT_MOUTH:
-          this.setDirection(Constants.YETI_STATE_MACHINE.EAT_1)
+          this.setState(Constants.YETI_STATE_MACHINE.EAT_1)
           break
         case Constants.YETI_STATE_MACHINE.EAT_1:
-          this.setDirection(Constants.YETI_STATE_MACHINE.EAT_2)
+          this.setState(Constants.YETI_STATE_MACHINE.EAT_2)
           break
         case Constants.YETI_STATE_MACHINE.EAT_2:
-          this.setDirection(Constants.YETI_STATE_MACHINE.EAT_3)
+          this.setState(Constants.YETI_STATE_MACHINE.EAT_3)
           break
         case Constants.YETI_STATE_MACHINE.EAT_3:
-          this.setDirection(Constants.YETI_STATE_MACHINE.EAT_4)
+          this.setState(Constants.YETI_STATE_MACHINE.EAT_4)
           break
         default:
           break
@@ -89,6 +118,10 @@ export class Yety extends Entity {
     }
   }
 
+  /*
+   * used to locate the player and chase it
+   * @return {void}
+   * */
   chasePlayer () {
     if (this.skier.position.y < this.position.y) {
       this.position.y -= (this.speed * 1)
@@ -103,14 +136,23 @@ export class Yety extends Entity {
     }
   }
 
+  /*
+   * enemy was catched, eat it and dispatch events
+   * @return {void}
+   * */
   eatSkier () {
     this.catched = true
-    this.setDirection(Constants.YETI_STATE_MACHINE.LIFT)
+    this.setState(Constants.YETI_STATE_MACHINE.LIFT)
     document.dispatchEvent(this.gameOverEvent)
     document.dispatchEvent(this.catchedEvent)
   }
 
-  checkIfSkierHitObstacle (obstacleManager, assetManager) {
+  /*
+   * enemy was catched, eat it and dispatch events
+   * @param {Object} assetManager
+   * @return {void}
+   * */
+  checkIfSkierHitObstacle (assetManager) {
     if (this.catched) {
       return
     }
@@ -122,7 +164,6 @@ export class Yety extends Entity {
       this.position.y - asset.height / 4
     )
 
-    // const asset = assetManager.getAsset()
     const obstacleAsset = assetManager.getAsset(this.skier.assetName)
     const obstaclePosition = this.skier.getPosition()
     const obstacleBounds = new Rect(
@@ -136,7 +177,6 @@ export class Yety extends Entity {
 
     if (collision) {
       this.eatSkier()
-      // this.setDirection(Constants.SKIER_DIRECTIONS.CRASH)
     }
   };
 }

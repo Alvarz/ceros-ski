@@ -1,8 +1,21 @@
+
+/*
+ * @class AssetManager
+ * */
 export class AssetManager {
+/*
+ * @class constructor
+ * */
   constructor () {
     this.loadedAssets = []
   }
 
+  /*
+   * used to load the assets img
+   * @async
+   * @param {array} assets
+   * @return {Promise<any>}
+   * */
   async loadAssets (assets) {
     const assetPromises = []
 
@@ -14,6 +27,13 @@ export class AssetManager {
     await Promise.all(assetPromises)
   }
 
+  /*
+   * used to load a single asset
+   * @async
+   * @param {string} assetUrl
+   * @param {string} assetName
+   * @return {Promise<any>}
+   * */
   loadSingleAsset (assetUrl, assetName) {
     return new Promise((resolve) => {
       const assetImage = new Image()
@@ -28,6 +48,11 @@ export class AssetManager {
     })
   }
 
+  /*
+   * get an asset by given name
+   * @param {string} assetName
+   * @return {object}
+   * */
   getAsset (assetName) {
     return this.loadedAssets[assetName]
   }

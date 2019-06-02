@@ -1,5 +1,11 @@
 
+/*
+ * @class Cnvas
+ * */
 export class Canvas {
+  /*
+   * @constructor
+   * */
   constructor (width, height) {
     this.x = 0
     this.y = 0
@@ -17,6 +23,10 @@ export class Canvas {
     this.createCanvas()
   }
 
+  /*
+   * create a new canvas
+   * @return {void}
+   * */
   createCanvas () {
     const canvas = document.createElement('canvas')
     canvas.id = 'skiCanvas'
@@ -32,19 +42,47 @@ export class Canvas {
     document.body.appendChild(canvas)
   }
 
+  /*
+   * clear the current canvas
+   * @return {void}
+   * */
   clearCanvas () {
     this.ctx.clearRect(this.x, this.y, this.width, this.height)
   }
 
+  /*
+   * set the draw offset
+   * @return {number} x
+   * @return {number} y
+   * @return {void}
+   * */
   setDrawOffset (x, y) {
     this.drawOffset.x = x
     this.drawOffset.y = y
   }
 
+  /*
+   * draw an image to be used as UI element
+   * @return {object} image
+   * @return {number} x
+   * @return {number} y
+   * @return {width} x
+   * @return {height} y
+   * @return {void}
+   * */
   drawImageUI (image, x, y, width, height) {
     this.ctx.drawImage(image, x, y, width, height)
   }
 
+  /*
+   * draw an image as game element
+   * @return {object} image
+   * @return {number} x
+   * @return {number} y
+   * @return {width} x
+   * @return {height} y
+   * @return {void}
+   * */
   drawImage (image, x, y, width, height) {
     x -= this.drawOffset.x
     y -= this.drawOffset.y
@@ -52,6 +90,14 @@ export class Canvas {
     this.ctx.drawImage(image, x, y, width, height)
   }
 
+  /*
+   * write a text on given coordinates to be used on UI
+   * @return {string} text
+   * @return {number} y
+   * @return {width} x
+   * @return {string} color
+   * @return {void}
+   * */
   drawText (text, x, y, color) {
     this.ctx.fillStyle = color
     this.ctx.fillText(text, x, y)
