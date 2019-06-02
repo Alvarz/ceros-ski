@@ -11,15 +11,16 @@ export class Game {
     this.origin = new Vector2D(0, 0)
     this.isGameOver = false
     this.isGamePause = false
+    this.catched = false
     this.gameWindow = null
     this.assetManager = new AssetManager()
     this.canvas = new Canvas(Constants.GAME_WIDTH, Constants.GAME_HEIGHT)
     this.skier = new Skier(this.origin)
     this.obstacleManager = new ObstacleManager()
-    this.gameManager = new GameManager(this.skier, this.origin)
+    this.gameManager = new GameManager(this.skier, this.origin, this.canvas, this.assetManager, this.obstacleManager)
 
     this.baseLocation = 50
-
+    document.addEventListener('Catched', this.Catched.bind(this))
     document.addEventListener('GameOver', this.GameOver.bind(this))
     document.addEventListener('keydown', this.handleKeyDown.bind(this))
   }
@@ -44,10 +45,13 @@ export class Game {
     window.requestAnimationFrame(this.run.bind(this))
   }
 
+  Catched () {
+    this.catched = true
+  }
+
   restart () {
     console.log('restart')
-    this.skier.start()
-    this.isGameOver = false
+    location.reload()
   }
 
   pauseOrResume () {
@@ -62,8 +66,10 @@ export class Game {
 
     if (this.isGameOver) {
       const distance = this.gameManager.distanceFromOriginToPlayerPosition()
-      this.canvas.drawText(`Well done, your distance was: ${distance} mts`, Constants.GAME_WIDTH * 0.35, Constants.GAME_HEIGHT * 0.5)
-      this.canvas.drawText('click enter to try again', Constants.GAME_WIDTH * 0.40, Constants.GAME_HEIGHT * 0.55)
+
+      const text = this.catched ? `You've been catched, your distance was: ${distance} mts` : `Well done, your distance was: ${distance} mts`
+      this.canvas.drawText(text, Constants.GAME_WIDTH * 0.35, Constants.GAME_HEIGHT * 0.60)
+      this.canvas.drawText('click enter to try again', Constants.GAME_WIDTH * 0.40, Constants.GAME_HEIGHT * 0.65)
     }
   }
 
@@ -97,6 +103,7 @@ export class Game {
    * */
   updateGameWindow () {
     this.drawUI()
+    this.gameManager.update()
     if (this.isGameOver || this.isGamePause) {
       this.handleGameOverOrPause()
       return
@@ -109,8 +116,6 @@ export class Game {
     this.obstacleManager.placeNewObstacle(this.gameWindow, previousGameWindow)
 
     this.skier.checkIfSkierHitObstacle(this.obstacleManager, this.assetManager)
-
-    this.gameManager.update()
   }
 
   GameOver (event) {
@@ -121,7 +126,9 @@ export class Game {
   drawGameWindow () {
     this.canvas.setDrawOffset(this.gameWindow.left, this.gameWindow.top)
 
-    this.skier.draw(this.canvas, this.assetManager)
+    if (!this.catched) {
+      this.skier.draw(this.canvas, this.assetManager)
+    }
     this.obstacleManager.drawObstacles(this.canvas, this.assetManager)
   }
 

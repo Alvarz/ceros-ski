@@ -42,6 +42,17 @@ export class Vector2D {
     }
   }
 
+  direction (otherVector2D) {
+    if (!(otherVector2D instanceof Vector2D)) {
+      throw 'is not a 2d vector'
+    }
+
+    const a = this.x - otherVector2D.x
+    const b = this.y - otherVector2D.y
+
+    return new Vector2D(a, b)
+  }
+
   distance (otherVector2D) {
     if (!(otherVector2D instanceof Vector2D)) {
       throw 'is not a 2d vector'
