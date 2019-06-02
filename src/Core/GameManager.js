@@ -1,8 +1,8 @@
-import { Canvas } from './Canvas'
 
 export default class GameManager {
   constructor (skier, origin) {
     this.origin = origin
+    this.canvas =
     this.skier = skier
     this.gameOverEvent = new Event('GameOver')
     document.addEventListener('PlayerWasHit', this.playerWasHit.bind(this))
@@ -11,7 +11,6 @@ export default class GameManager {
 
   update () {
     // called on per frame
-    this.distanceFromOriginToPlayerPosition(this.origin)
   }
 
   isPlayerisAlive () {
@@ -23,9 +22,8 @@ export default class GameManager {
     console.log('PlayerWasHit, play some sound')
   }
 
-  distanceFromOriginToPlayerPosition (origin) {
-    const distance = this.skier.position.distance(origin)
-
-    console.log('distance from start: ', distance)
+  distanceFromOriginToPlayerPosition () {
+    return this.skier.position.distance(this.origin)
+    // console.log('distance from start: ', distance)
   }
 }

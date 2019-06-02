@@ -18,11 +18,16 @@ export class Game {
     this.obstacleManager = new ObstacleManager()
     this.gameManager = new GameManager(this.skier, this.origin)
 
+    this.baseLocation = 50
+
     document.addEventListener('GameOver', this.GameOver.bind(this))
     document.addEventListener('keydown', this.handleKeyDown.bind(this))
   }
 
   init () {
+    this.heart = this.assetManager.getAsset('HEART')
+    this.arrows = this.assetManager.getAsset('ARROWS')
+    this.spacebar = this.assetManager.getAsset('SPACEBAR')
     this.obstacleManager.placeInitialObstacles()
   }
 
@@ -50,12 +55,50 @@ export class Game {
     this.isGamePause = !this.isGamePause
   }
 
+  handleGameOverOrPause () {
+    if (this.isGamePause) {
+      this.canvas.drawText('Pause', (Constants.GAME_WIDTH / 2) * 0.9, Constants.GAME_HEIGHT / 2)
+    }
+
+    if (this.isGameOver) {
+      const distance = this.gameManager.distanceFromOriginToPlayerPosition()
+      this.canvas.drawText(`Well done, your distance was: ${distance} mts`, Constants.GAME_WIDTH * 0.35, Constants.GAME_HEIGHT * 0.5)
+      this.canvas.drawText('click enter to try again', Constants.GAME_WIDTH * 0.40, Constants.GAME_HEIGHT * 0.55)
+    }
+  }
+
+  drawHeartLifes () {
+    for (let i = 1; i <= this.skier.life; i++) {
+      this.canvas.drawImageUI(this.heart, Constants.UI_LOCATION.BASE_HEART * i, 30, Constants.UI_LOCATION.HEART_WIDTH, Constants.UI_LOCATION.HEART_HEIGHT)
+    }
+  }
+
+  drawDistance () {
+    const distance = this.gameManager.distanceFromOriginToPlayerPosition()
+    this.canvas.drawText(`distance: ${distance} mts`, Constants.GAME_WIDTH - 350, 50, Constants.COLORS.BLACK)
+  }
+
+  drawControls () {
+    this.canvas.drawImageUI(this.arrows, Constants.GAME_WIDTH * 0.05, Constants.GAME_HEIGHT * 0.75, this.arrows.width * 0.3, this.arrows.height * 0.3)
+    this.canvas.drawText('movement', Constants.GAME_WIDTH * 0.12, Constants.GAME_HEIGHT * 0.80, Constants.COLORS.BLACK)
+    this.canvas.drawImageUI(this.spacebar, Constants.GAME_WIDTH * 0.06, Constants.GAME_HEIGHT * 0.87, this.spacebar.width * 0.3, this.spacebar.height * 0.3)
+    this.canvas.drawText('pause', Constants.GAME_WIDTH * 0.12, Constants.GAME_HEIGHT * 0.90, Constants.COLORS.BLACK)
+  }
+
+  drawUI () {
+    this.drawDistance()
+    this.drawHeartLifes()
+    this.drawControls()
+  }
+
   /*
    * main game Update
    * @return {void}
    * */
   updateGameWindow () {
+    this.drawUI()
     if (this.isGameOver || this.isGamePause) {
+      this.handleGameOverOrPause()
       return
     }
     this.skier.move()

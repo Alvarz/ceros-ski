@@ -27,7 +27,25 @@ export const ASSETS = {
   [TREE]: 'img/tree_1.png',
   [TREE_CLUSTER]: 'img/tree_cluster.png',
   [ROCK1]: 'img/rock_1.png',
-  [ROCK2]: 'img/rock_2.png'
+  [ROCK2]: 'img/rock_2.png',
+  HEART: 'img/heart.png',
+  ARROWS: 'img/movement.png',
+  SPACEBAR: 'img/spacebar.png'
+}
+
+export const UI_LOCATION = {
+  BASE_HEART: 50,
+  HEART_WIDTH: 30,
+  HEART_HEIGHT: 30
+
+}
+
+export const COLORS = {
+
+  BLACK: 'black',
+  WHITE: 'white',
+  ORANGE: 'orange'
+
 }
 
 export const SKIER_DIRECTIONS = {
@@ -55,4 +73,9 @@ export const KEYS = {
   DOWN: 40,
   ENTER: 13,
   SPACEBAR: 32
+}
+
+export const UI_TEXT = {
+  PAUSE: 'Pause',
+  GAME_OVER: 'Game Over'
 }

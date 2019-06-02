@@ -1,3 +1,4 @@
+
 export class Canvas {
   constructor (width, height) {
     this.x = 0
@@ -25,6 +26,7 @@ export class Canvas {
     canvas.style.height = this.height + 'px'
 
     this.ctx = canvas.getContext('2d')
+    this.ctx.font = '30px VT323'
     this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
 
     document.body.appendChild(canvas)
@@ -39,10 +41,19 @@ export class Canvas {
     this.drawOffset.y = y
   }
 
+  drawImageUI (image, x, y, width, height) {
+    this.ctx.drawImage(image, x, y, width, height)
+  }
+
   drawImage (image, x, y, width, height) {
     x -= this.drawOffset.x
     y -= this.drawOffset.y
 
     this.ctx.drawImage(image, x, y, width, height)
+  }
+
+  drawText (text, x, y, color) {
+    this.ctx.fillStyle = color
+    this.ctx.fillText(text, x, y)
   }
 }
