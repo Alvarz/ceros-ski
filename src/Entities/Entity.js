@@ -1,30 +1,55 @@
+import { Vector2D } from '../Core/Utils'
+
+/*
+ * @class Entity
+ * */
 export class Entity {
-    x = 0;
-    y = 0;
+  /*
+   * constructor
+   * */
+  constructor (x = 0, y = 0) {
+    this.position = new Vector2D(x, y)
+    this.assetName = ''
+  }
 
-    assetName = '';
+  /*
+   * get the current asset name
+   * @return {string}
+   * */
+  getAssetName () {
+    return this.assetName
+  }
 
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
+  /*
+   * set the position of the entity
+   * @param {number} x
+   * @param {number}  y
+   * @return {void}
+   * */
+  setPosition (x, y) {
+    this.position.x = x
+    this.position.y = y
+  }
 
-    getAssetName() {
-        return this.assetName;
-    }
+  /*
+   * get the current position of the entity
+   * @return {object}
+   * */
+  getPosition () {
+    return this.position.get()
+  }
 
-    getPosition() {
-        return {
-            x: this.x,
-            y: this.y
-        };
-    }
+  /*
+   * draw the entity on the canvas
+   * @param {object} canvas
+   * @param {object} assetManager
+   * @return {object}
+   * */
+  draw (canvas, assetManager) {
+    const asset = assetManager.getAsset(this.assetName)
+    const drawX = this.position.x - asset.width / 2
+    const drawY = this.position.y - asset.height / 2
 
-    draw(canvas, assetManager) {
-        const asset = assetManager.getAsset(this.assetName);
-        const drawX = this.x - asset.width / 2;
-        const drawY = this.y - asset.height / 2;
-
-        canvas.drawImage(asset, drawX, drawY, asset.width, asset.height);
-    }
+    canvas.drawImage(asset, drawX, drawY, asset.width, asset.height)
+  }
 }

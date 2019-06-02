@@ -1,48 +1,105 @@
+
+/*
+ * @class Cnvas
+ * */
 export class Canvas {
-    x = 0;
-    y = 0;
-    width = 0;
-    height = 0;
-    drawOffset = {
-        x: 0,
-        y: 0
-    };
-    ctx = null;
-
-    constructor(width, height) {
-        this.width = width;
-        this.height = height;
-
-        this.createCanvas();
+  /*
+   * @constructor
+   * */
+  constructor (width, height) {
+    this.x = 0
+    this.y = 0
+    this.width = 0
+    this.height = 0
+    this.drawOffset = {
+      x: 0,
+      y: 0
     }
+    this.ctx = null
 
-    createCanvas() {
-        const canvas = document.createElement('canvas');
-        canvas.id = "skiCanvas";
-        canvas.width = this.width * window.devicePixelRatio;
-        canvas.height = this.height * window.devicePixelRatio;
-        canvas.style.width = this.width + 'px';
-        canvas.style.height = this.height + 'px';
+    this.width = width
+    this.height = height
 
-        this.ctx = canvas.getContext("2d");
-        this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    this.createCanvas()
+  }
 
-        document.body.appendChild(canvas);
-    }
+  /*
+   * create a new canvas
+   * @return {void}
+   * */
+  createCanvas () {
+    const canvas = document.createElement('canvas')
+    canvas.id = 'skiCanvas'
+    canvas.width = this.width * window.devicePixelRatio
+    canvas.height = this.height * window.devicePixelRatio
+    canvas.style.width = this.width + 'px'
+    canvas.style.height = this.height + 'px'
 
-    clearCanvas() {
-        this.ctx.clearRect(this.x, this.y, this.width, this.height);
-    }
+    this.ctx = canvas.getContext('2d')
+    this.ctx.font = '30px VT323'
+    this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
 
-    setDrawOffset(x, y) {
-        this.drawOffset.x = x;
-        this.drawOffset.y = y;
-    }
+    document.body.appendChild(canvas)
+  }
 
-    drawImage(image, x, y, width, height) {
-        x -= this.drawOffset.x;
-        y -= this.drawOffset.y;
+  /*
+   * clear the current canvas
+   * @return {void}
+   * */
+  clearCanvas () {
+    this.ctx.clearRect(this.x, this.y, this.width, this.height)
+  }
 
-        this.ctx.drawImage(image, x, y, width, height);
-    }
+  /*
+   * set the draw offset
+   * @return {number} x
+   * @return {number} y
+   * @return {void}
+   * */
+  setDrawOffset (x, y) {
+    this.drawOffset.x = x
+    this.drawOffset.y = y
+  }
+
+  /*
+   * draw an image to be used as UI element
+   * @return {object} image
+   * @return {number} x
+   * @return {number} y
+   * @return {width} x
+   * @return {height} y
+   * @return {void}
+   * */
+  drawImageUI (image, x, y, width, height) {
+    this.ctx.drawImage(image, x, y, width, height)
+  }
+
+  /*
+   * draw an image as game element
+   * @return {object} image
+   * @return {number} x
+   * @return {number} y
+   * @return {width} x
+   * @return {height} y
+   * @return {void}
+   * */
+  drawImage (image, x, y, width, height) {
+    x -= this.drawOffset.x
+    y -= this.drawOffset.y
+
+    this.ctx.drawImage(image, x, y, width, height)
+  }
+
+  /*
+   * write a text on given coordinates to be used on UI
+   * @return {string} text
+   * @return {number} y
+   * @return {width} x
+   * @return {string} color
+   * @return {void}
+   * */
+  drawText (text, x, y, color) {
+    this.ctx.fillStyle = color
+    this.ctx.fillText(text, x, y)
+  }
 }
